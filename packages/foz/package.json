@@ -1,5 +1,5 @@
 {
-	"name"        : "@test/foo",
+	"name"        : "@test/foz",
 	"version"     : "1.0.0",
 	"dependencies": {
 		"@test/bar": "1.0.0",
