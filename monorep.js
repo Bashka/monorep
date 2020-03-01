@@ -1,6 +1,7 @@
 const
 	fs = require('fs'),
 	{promises: fsPromises} = require('fs'),
+  path = require('path'),
 	{neatJSON} = require('neatjson'),
 	glob = require('glob')
 ;
@@ -15,7 +16,7 @@ const
 class Package {
 	/**
 	 * @params {string} path
-	 * @params {Object} packageJson
+   * @params {PackageJson} packageJson
 	 */
 	constructor(path, packageJson) {
 		this.path = path;
@@ -130,41 +131,44 @@ class Package {
 
 		return p;
 		*/
-		console.log(`save start ${p.name}`);
+    //console.log(`save start ${p.name}`);
 		return new Promise((resolve => setTimeout(() => {
-			console.log(`save end ${p.name}`);
+      //console.log(`save end ${p.name}`);
 			resolve(p)
-		}, 100)));
+		}, 500)));
 	};
 
 	static commit = options => async p => {
-		console.log(`commit start ${p.name}`);
+    //console.log(`commit start ${p.name}`);
 		return new Promise((resolve => setTimeout(() => {
-			console.log(`commit end ${p.name}`);
+      //console.log(`commit end ${p.name}`);
 			resolve(p)
-		}, 100)));
+		}, 1000)));
 	};
 
 	static update = async p => {
-		console.log(`update start ${p.name}`);
+    //console.log(`update start ${p.name}`);
 		return new Promise((resolve => setTimeout(() => {
-			console.log(`update end ${p.name}`);
+      //console.log(`update end ${p.name}`);
 			resolve(p)
-		}, 100)));
+		}, 2000)));
 	};
 
 	static publish = async p => {
-		console.log(`publish start ${p.name}`);
+    //console.log(`publish start ${p.name}`);
 		return new Promise((resolve => setTimeout(() => {
-			console.log(`publish end ${p.name}`);
+      //console.log(`publish end ${p.name}`);
 			resolve(p)
-		}, 100)));
+		}, 1000)));
 	};
 }
 
 /**
  * @typedef {{
- *     packages: string
+ *     glob: {
+ *         packages: string,
+ *         ignore: string[]|undefined
+ *     }
  * }} MonorepConfig
  */
 class Monorep {
@@ -186,12 +190,12 @@ class Monorep {
 		return new Monorep(
 			config,
 			await Promise.all(
-				glob.sync(`${config.packages}/*`, {silent: true}).map(async packageDir =>
+				glob.sync(config.glob.search, {silent: true, ...config.glob}).map(async packageJsonFile =>
 					new Package(
-						packageDir,
-						JSON.parse(await fsPromises.readFile(`${packageDir}/package.json`))
+						path.dirname(packageJsonFile),
+						JSON.parse(await fsPromises.readFile(packageJsonFile))
 					)
-				)
+        )
 			)
 		);
 	}

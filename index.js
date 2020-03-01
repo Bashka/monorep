@@ -1,9 +1,7 @@
 const
-	fs = require('fs'),
-	{promises: fsPromises} = require('fs'),
+  fs = require('fs'),
 	cla = require('command-line-args'),
 	{red} = require('colors'),
-	config = require('./monorep.json'),
 	{Monorep} = require('./monorep'),
 	commands = require('./commands'),
 	{RuntimeError} = require('./lib/error')
@@ -11,14 +9,12 @@ const
 
 (async(config) => {
 	config = {
-		packages: 'packages',
+		glob: {
+      search: 'packages/**/package.json',
+      ignore: ['packages/**/node_modules/**/package.json']
+    },
 		...config
 	};
-
-	if (!await fs.existsSync(config.packages)) return console.error(`Packages directory not found in "${config.packages}"`);
-
-	const packagesDir = await fsPromises.lstat(config.packages);
-	if (!packagesDir.isDirectory()) return console.error(`Packages directory not found in "${config.packages}"`);
 
 	const
 		mainOptions = cla([
@@ -32,9 +28,7 @@ const
 	if (commandHandler === undefined) return console.error(`Undefined command "${command}"`);
 
 	try {
-		console.log(
-			await commandHandler(monorep, argv)
-		);
+    await commandHandler(monorep, argv)
 	}
 	catch(e) {
 		if (e instanceof RuntimeError) {
@@ -45,6 +39,4 @@ const
 		}
 		process.exit(1);
 	}
-
-	//process.exit(0);
-})(config);
+})(fs.existsSync('./monorep.json') ? require('./monorep.json') : {});

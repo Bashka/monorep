@@ -1,6 +1,6 @@
 {
 	"name"        : "@test/bar",
-	"version"     : "1.0.0",
+	"version"     : "3.0.1",
 	"dependencies": {
 		"@test/baz": "1.0.0"
 	}
