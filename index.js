@@ -50,4 +50,4 @@ const
 		}
 		process.exit(1);
 	}
-})(fs.existsSync('./monorep.json') ? require('./monorep.json') : {});
+})(fs.existsSync('./monorep.json') ? JSON.parse(fs.readFileSync('./monorep.json').toString('utf8')) : {});
