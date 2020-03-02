@@ -1,6 +1,6 @@
 {
 	"name"           : "@tokenomica/monorep",
-	"version"        : "1.0.4",
+	"version"        : "1.0.5",
 	"main"           : "index.js",
 	"bin"            : {
 		"monorep": "./index.js"
