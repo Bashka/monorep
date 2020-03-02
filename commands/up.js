@@ -161,8 +161,7 @@ module.exports = async (monorep, argv) => {
 			state.status = 'error';
 			state.error = e;
 			renderViews();
-
-			process.exit(1);
+			return;
 		}
 
 		state.status = 'success';
