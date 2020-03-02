@@ -1,8 +1,0 @@
-{
-	"name"        : "@test/foz",
-	"version"     : "1.12.0",
-	"dependencies": {
-		"@test/bar": "3.0.1",
-		"uuid"     : "^7.0.1"
-	}
-}

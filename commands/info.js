@@ -5,7 +5,7 @@ const
 	{compose, prop} = require('../lib/fp'),
 	{list, nl} = require('../lib/view'),
 	{Monorep} = require('../monorep'),
-  {infoHelp} = require('./helps')
+	{infoHelp} = require('./helps')
 ;
 
 module.exports = async (monorep, argv) => {
@@ -18,7 +18,8 @@ module.exports = async (monorep, argv) => {
 		{name: 'package', defaultOption: true},
 		{name: 'help', alias: 'h', type: Boolean, defaultValue: false}
 	], {argv, stopAtFirstUnknown: true});
-  infoHelp(params);
+	if (!params.package) params.help = true;
+	infoHelp(params);
 
 	const p = monorep.find(Monorep.byName(params.package));
 	if (p === undefined) throw new RuntimeError(`Package "${params.package}" not found`);
@@ -29,7 +30,7 @@ module.exports = async (monorep, argv) => {
 	;
 
 	console.log(
-`${blue(p.name)} ${p.version}
+		`${blue(p.name)} ${p.version}
 	
   dependencies:
     ${dependencies.map(compose(list, blue, prop('name'))).join(nl)}
@@ -37,6 +38,6 @@ module.exports = async (monorep, argv) => {
   dependents:
     ${dependents.map(compose(list, blue, prop('name'))).join(nl)}
 `
-  );
-  process.exit(0);
+	);
+	process.exit(0);
 };

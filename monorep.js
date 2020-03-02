@@ -1,7 +1,7 @@
 const
-	fs = require('fs'),
 	{promises: fsPromises} = require('fs'),
-  path = require('path'),
+	path = require('path'),
+	{exec} = require('child_process'),
 	{neatJSON} = require('neatjson'),
 	glob = require('glob')
 ;
@@ -16,7 +16,7 @@ const
 class Package {
 	/**
 	 * @params {string} path
-   * @params {PackageJson} packageJson
+	 * @params {PackageJson} packageJson
 	 */
 	constructor(path, packageJson) {
 		this.path = path;
@@ -27,7 +27,7 @@ class Package {
 	 * @returns {string}
 	 */
 	get jsonPath() {
-		return `${this.path}/package.json`
+		return `${this.path}/package.json`;
 	}
 
 	/**
@@ -104,17 +104,16 @@ class Package {
 		return {
 			...json,
 			dependencies: Object.entries((json.dependencies || {})).reduce(
-				(dependencies, [dep, v]) => {
-					return dep === d.name
-					       ? ({
+				(dependencies, [dep, v]) =>
+					dep === d.name
+						? {
 							...dependencies,
 							[dep]: d.version
-						})
-					       : {
+						}
+						: {
 							...dependencies,
 							[dep]: v
-						}
-				},
+						},
 				{}
 			)
 		};
@@ -126,41 +125,51 @@ class Package {
 	 * @returns {function(Package): Promise<Package>}
 	 */
 	static save = options => async p => {
-		/*
 		await fsPromises.writeFile(p.jsonPath, neatJSON(p.packageJson, options));
 
 		return p;
-		*/
-    //console.log(`save start ${p.name}`);
-		return new Promise((resolve => setTimeout(() => {
-      //console.log(`save end ${p.name}`);
-			resolve(p)
-		}, 500)));
 	};
 
-	static commit = options => async p => {
-    //console.log(`commit start ${p.name}`);
-		return new Promise((resolve => setTimeout(() => {
-      //console.log(`commit end ${p.name}`);
-			resolve(p)
-		}, 1000)));
+	/**
+	 * @params {Object} options
+	 *
+	 * @returns {function(Package): Promise<Package>}
+	 */
+	static pretty = options => async p => {
+		await fsPromises.writeFile(
+			p.jsonPath,
+			neatJSON(
+				JSON.parse(
+					await (await fsPromises.readFile(p.jsonPath)).toString('utf8')
+				),
+				options
+			)
+		);
+
+		return p;
 	};
 
-	static update = async p => {
-    //console.log(`update start ${p.name}`);
-		return new Promise((resolve => setTimeout(() => {
-      //console.log(`update end ${p.name}`);
-			resolve(p)
-		}, 2000)));
+	/**
+	 * @param {{
+	 *     exec: string
+	 * }} options
+	 *
+	 * @returns {function(Package): Promise<Package>}
+	 */
+	static exec = options => async p => {
+		return new Promise((resolve, reject) => {
+			exec(`cd ${p.path} && ${options.exec}`, (error) => {
+				if (error) reject(error);
+
+				resolve(p);
+			});
+		});
 	};
 
-	static publish = async p => {
-    //console.log(`publish start ${p.name}`);
-		return new Promise((resolve => setTimeout(() => {
-      //console.log(`publish end ${p.name}`);
-			resolve(p)
-		}, 1000)));
-	};
+	static commit = Package.exec;
+	static push = Package.exec;
+	static update = Package.exec;
+	static publish = Package.exec;
 }
 
 /**
@@ -178,7 +187,7 @@ class Monorep {
 	 */
 	constructor(config, packages) {
 		this.config = config;
-		this.packages = packages
+		this.packages = packages;
 	}
 
 	/**
@@ -195,7 +204,7 @@ class Monorep {
 						path.dirname(packageJsonFile),
 						JSON.parse(await fsPromises.readFile(packageJsonFile))
 					)
-        )
+				)
 			)
 		);
 	}
@@ -227,7 +236,7 @@ class Monorep {
 		return new Monorep(
 			this.config,
 			this.packages.map(fn)
-		)
+		);
 	}
 
 	/**
@@ -239,7 +248,7 @@ class Monorep {
 		return new Monorep(
 			this.config,
 			this.packages.flatMap(fn)
-		)
+		);
 	}
 
 	/**

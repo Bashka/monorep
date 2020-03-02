@@ -1,5 +1,5 @@
 const help = message => params => {
-  if (!params['help']) return
+  if (!params['help']) return;
   console.log(message);
   process.exit(0);
 };

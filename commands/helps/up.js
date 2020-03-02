@@ -5,7 +5,7 @@ ${yellow('NAME')}
     up - update version package and dependencies
 
 ${yellow('SYNOPSIS')}
-    up <package-name> [--help|-h] [--version|-v<mode>] [--no-all] [--no-save] [--no-update] [--no-publish] [--no-commit]
+    up <package-name> [--help|-h] [--version|-v <mode>] [--commit-message|-m <message>] [--no-all] [--no-save] [--no-update] [--no-pretty] [--no-publish] [--no-commit] [--no-push]
 
 ${yellow('OPTIONS')}
     ${red('-h')}, --help
@@ -13,6 +13,9 @@ ${yellow('OPTIONS')}
 
     ${red('-v')} <mode>, --version=<mode>
       Set version up mode: major, minor or patch.
+      
+    ${red('-m')} <message>, --commit-message <message>
+      Set commit message.
 
     ${red('--no-all')}
       Disable all updates.
@@ -22,12 +25,18 @@ ${yellow('OPTIONS')}
       
     ${red('--no-update')}
       Disable "npm install" for updates packages.
+      
+    ${red('--no-pretty')}
+      Disable prettify pacakge.json file after update.
 
     ${red('--no-publish')}
       Disable "npm publish" for updates packages.
 
     ${red('--no-commit')}
       Disable "git commit" for updates packages.
+      
+    ${red('--no-push')}
+      Disable "git push" for updates packages.
 
 ${yellow('EXAMPLES')}
     For update minor version for all dependencies packages with @test/foo package use:

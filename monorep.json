@@ -1,6 +1,0 @@
-{
-	"glob": {
-		"search": "packages/**/package.json",
-		"ignore": ["packages/**/node_modules/**/package.json"]
-	}
-}

@@ -1,5 +1,5 @@
 const
-  fs = require('fs'),
+	fs = require('fs'),
 	cla = require('command-line-args'),
 	{red} = require('colors'),
 	{Monorep} = require('./monorep'),
@@ -9,10 +9,19 @@ const
 
 (async(config) => {
 	config = {
-		glob: {
-      search: 'packages/**/package.json',
-      ignore: ['packages/**/node_modules/**/package.json']
-    },
+		glob  : {
+			search: 'packages/**/package.json',
+			ignore: ['packages/**/node_modules/**/package.json'],
+			...(config.glob || {})
+		},
+		exec: {
+			add    : 'git add -A',
+			commit : 'git commit -a --allow-empty-message',
+			push   : 'git push',
+			update : 'npm install',
+			publish: 'npm publish',
+			...(config.exec || {})
+		},
 		...config
 	};
 
@@ -28,7 +37,7 @@ const
 	if (commandHandler === undefined) return console.error(`Undefined command "${command}"`);
 
 	try {
-    await commandHandler(monorep, argv)
+		await commandHandler(monorep, argv)
 	}
 	catch(e) {
 		if (e instanceof RuntimeError) {

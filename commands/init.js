@@ -17,6 +17,22 @@ module.exports = async (monorep, argv) => {
 	"glob": {
 		"search": "packages/**/package.json",
 		"ignore": ["packages/**/node_modules/**/package.json"]
+	},
+	"pretty": {
+		"wrap"         : 0,
+		"sort"         : 1,
+		"indent"       : "\t",
+		"aligned"      : true,
+		"objectPadding": 1,
+		"afterComma"   : 1,
+		"afterColonN"  : 1
+	},
+	"exec": {
+		"add"    : "git add -A",
+		"commit" : "git commit -a --allow-empty-message",
+		"push"   : "git push",
+		"update" : "npm install",
+		"publish": "npm publish"
 	}
 }`);
 
