@@ -33,7 +33,8 @@ module.exports = async (monorep, argv) => {
 		"push"   : "git push",
 		"update" : "npm install",
 		"publish": "npm publish"
-	}
+	},
+	"no-publish": []
 }`);
 
   process.exit(0);

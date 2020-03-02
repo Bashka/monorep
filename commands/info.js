@@ -32,11 +32,11 @@ module.exports = async (monorep, argv) => {
 	console.log(
 		`${blue(p.name)} ${p.version}
 	
-  dependencies:
-    ${dependencies.map(compose(list, blue, prop('name'))).join(nl)}
-    
-  dependents:
-    ${dependents.map(compose(list, blue, prop('name'))).join(nl)}
+dependencies:
+${dependencies.map(compose(list, blue, prop('name'))).join(nl)}
+
+dependents:
+${dependents.map(compose(list, blue, prop('name'))).join(nl)}
 `
 	);
 	process.exit(0);

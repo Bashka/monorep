@@ -102,20 +102,20 @@ module.exports = async (monorep, argv) => {
 	const
 		views = new Map(
 			updatedDependency.flatMap(p => {
-												const state = {
-												loader     : loader({n: 0}),
-												name       : p.name,
-												fromVersion: monorep.find(Monorep.byName(p.name)).version,
-												toVersion  : p.version,
-												status     : 'wait',
-												error      : ''
-												};
+				const state = {
+					loader     : loader({n: 0}),
+					name       : p.name,
+					fromVersion: monorep.find(Monorep.byName(p.name)).version,
+					toVersion  : p.version,
+					status     : 'wait',
+					error      : ''
+				};
 
-												return [
-												p.name,
-												{state, view: packageView(state)()}
-												];
-												})
+				return [
+					p.name,
+					{state, view: packageView(state)()}
+				];
+			})
 		),
 		renderViews = () => Array.from(views.values()).forEach(({view}) => view())
 	;
@@ -153,7 +153,7 @@ module.exports = async (monorep, argv) => {
 				state.status = 'push';
 				await Package.push({exec: push})(p);
 			}
-			if (!params['no-publish']) {
+			if (!params['no-publish'] && !monorep.config['no-publish'].includes(p.name)) {
 				state.status = 'publish';
 				await Package.publish({exec: publish})(p);
 			}

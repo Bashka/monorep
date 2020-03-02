@@ -24,6 +24,7 @@ const
 			publish: 'npm publish',
 			...(config.exec || {})
 		},
+		'no-publish': [],
 		...config
 	};
 
